@@ -16,6 +16,7 @@ description: "把网页打包成 Windows exe（可同时产出安卓 APK）的�
      `https://github.com/zjqzte2010/web2exe/releases/download/v0.2.1/exeify.exe`
    - 下载后放到本 skill 目录再继续；用户网络访问不通就直说打包器缺失、无法打包。
 3. 跑一次 `exeify.exe version`（秒退），确认可执行、记下版本号（本 skill 随附 0.2.1）。
+   单独一行执行、用退出码判断即可；不要把它的输出拼进 shell 表达式里捕获（个别 shell 会提前关闭管道，进程会报 panic，与打包能力无关）。
 
 ## 2. 先问清这四项（缺就问，不要猜）
 

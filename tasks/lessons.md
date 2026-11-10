@@ -34,3 +34,19 @@ WebView2 子窗口不吃 `PostMessage` 的滚轮/点击，`PrintWindow` 只能�
 
 ### 7. Write 工具不能创建不存在的父目录
 往 `tasks\lessons.md` 直写报 `Permission denied`。先用 `New-Item -ItemType Directory`（提权）建好目录，再写文件。
+
+### 8. `Copy-Item -LiteralPath` 不吃通配符
+写 `Copy-Item -LiteralPath "$src\*" -Destination $dst -Recurse` 会报 `Cannot find path ...\*`，因为 `-LiteralPath` 把 `*` 当字面字符。
+- 正确做法：`Get-ChildItem -LiteralPath $src -Force | Copy-Item -Destination $dst -Recurse -Force`，或改用会展开通配符的 `-Path`。
+- 复制目录时要带 `-Force` 取到隐藏文件。
+- 覆盖安装脚本要防"备份被自己覆盖"：备份目录已存在时不要先 `Remove-Item` 再 `Move-Item`，否则第二次运行会把上一版好备份换成空目录。
+
+### 9. 随技能分发的二进制被全局 `*.exe` 忽略规则挡住
+`.gitignore` 里 `*.exe` 会把 skill 目录必须随附的 `exeify.exe` 一起排除；`git add` 后文件不在暂存区，技能拷到别处就无法打包。
+- 处理：加否定规则 `!skill/**/exeify.exe`，并在 `git status --porcelain` 里确认该二进制真的进了暂存区，再用 GitHub contents API 核对远端 `size`。
+
+### 10. Rust 程序写已关闭的 stdout 管道会 panic
+把 `& exeify.exe version` 直接拼进 PowerShell 字符串表达式时，进程报 `failed printing to stdout: 管道正在被关闭 (os error 232)` 并 panic。
+- 只影响输出被提前关闭的调用方式，正常执行不受影响；但说明 `println!` 未处理写失败。
+- 调用侧：单独一行执行、用 `$LASTEXITCODE` 判断，不要把原生命令输出拼进表达式。
+
