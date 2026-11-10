@@ -24,6 +24,22 @@
 
 </div>
 
+## 下载
+
+直接取编译好的程序，不用自己装 Rust：
+
+**[⬇ 前往 Releases 下载 v0.2.1](https://github.com/zjqzte2010/web2exe/releases/tag/v0.2.1)**
+
+| 附件 | 说明 |
+|---|---|
+| `exeify.exe` | 打包器本体（图形界面 + 命令行），1.37 MB，开箱即用 |
+| `offline.exe` | 示例：本地网页目录打成的离线 exe |
+| `online.exe` | 示例：在线网址打成的 exe |
+| `dual.exe` / `dual.apk` | 示例：一次打包同时产出 exe + apk |
+| `url.apk` | 示例：只出 APK |
+
+> APK 使用仓库内置的 demo 签名证书（`CN=Exeify Demo`），适合侧载/内部分发；上架应用市场请换自己的密钥。
+
 ## 特点
 
 - **极致轻量**：打包器和产物都只有约 1 MB（对比 Electron ~100 MB、Pake ~10 MB）。
