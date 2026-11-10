@@ -76,7 +76,7 @@ exeify.exe pack --url <网址> --out <输出.exe> [--apk <输出.apk>] [选项]
 ## 6. 常见故障与边界
 
 - **打包器自身界面打不开 / `HRESULT(0x8000FFFF)` 灾难性故障**：WebView2 用户数据目录被污染或残留进程占用。本工具已把配置目录隔离到 `%LOCALAPPDATA%\web2app\<exe名>` 并在首次失败时自动换一个全新目录重试；仍失败就清掉该目录后再开。
-- **APK 是 demo 签名**：内置证书 `CN=Exeify Demo`，私钥公开在仓库里，只适合侧载/内部试用。用户要对外分发或上架应用市场时，必须明确提示换自己的 keystore 重签 —— 这个包不能直接上架。
+- **APK 是 demo 签名**：内置证书 `CN=Exeify Demo`，私钥公开在仓库里，只适合侧载/内部试用。用户要对外分发或上架应用市场时，必须明确提示换自己的 keystore 重签 —— 这个包不能直接上架。现版本没有 `--keystore` 参数；换密钥的两条可执行路径（改源码重编译 / `apksigner` 重签）见 `references/troubleshooting.md`。
 - **安卓端要求**：Android 7+ 自带 System WebView；安装需允许「未知来源」。
 - **体积**：exe 约 1.4 MB（运行时靠系统 WebView2，不内嵌引擎），apk 约 45 KB 起。用户提到体积上限（如 200 MB）时直接给实测字节数，不要估算。
 - **资源是自包含附在 exe 尾部，不是加密保护**：不要向用户承诺「源码不可提取」。

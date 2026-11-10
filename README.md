@@ -38,7 +38,26 @@
 | `dual.exe` / `dual.apk` | 示例：一次打包同时产出 exe + apk |
 | `url.apk` | 示例：只出 APK |
 
-> APK 使用仓库内置的 demo 签名证书（`CN=Exeify Demo`），适合侧载/内部分发；上架应用市场请换自己的密钥。
+> **关于 APK 签名（重要）**：上面这些 apk 用的是仓库内置的 demo 证书（`CN=Exeify Demo`），私钥就公开在仓库里 —— 任何人拿到它都能签出同包名的包。**只适合自己侧载、内部试用；不要对外分发，更不要上应用商店。**
+>
+> 当前版本命令行**没有** `--keystore` 之类的参数，APK 密钥固定取 `assets/apk/key.pem`。要换自己的密钥，改源码后重新编译：
+>
+> ```bash
+> # 1) 生成自己的密钥对（Android 用 RSA 2048，有效期自定）
+> keytool -genkeypair -v -keystore my-release.jks -alias mykey \
+>   -keyalg RSA -keysize 2048 -validity 36500 \
+>   -storepass <你的密码> -keypass <你的密码> \
+>   -dname "CN=你的公司名, O=你的组织, C=CN"
+> # 2) 导出 PKCS#8 私钥（DER）与证书（DER），替换仓库里的两份材料
+> keytool -importkeystore -srckeystore my-release.jks -destkeystore my.p12 -deststoretype PKCS12 -srcalias mykey
+> openssl pkcs12 -in my.p12 -nocerts -nodes -out my.key.pem
+> openssl pkcs8 -topk8 -inform PEM -outform DER -in my.key.pem -out private.der -nocrypt
+> openssl req -in <(keytool -exportcert -rfc -keystore my-release.jks -alias mykey -storepass <密码>) -outform DER -out cert.der
+> # 3) 用 private.der / cert.der 替换 assets/apk/key.pem（内含的私钥与证书），然后
+> cargo build --release
+> ```
+>
+> 已经是 apk 成品、只是要重签，也可以直接用 Android SDK 的 `apksigner sign --ks my-release.jks --ks-key-alias mykey app.apk`；注意重签后本仓库的 `scripts/verify_apk.py` 是按内置证书验签的，会报验签不匹配，这属正常（不代表包坏了），换用 `apksigner verify -v` 校验即可。
 
 ## 特点
 

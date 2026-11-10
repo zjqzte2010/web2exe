@@ -5,8 +5,10 @@
 *.exe
 # 例外：豆包 Skill 必须自带打包器二进制，否则装到技能目录后无法打包
 !skill/**/exeify.exe
-# 已下线的公众号二维码素材（界面不再引用）
+# 已下线的公众号二维码素材（界面不再引用；宿主对该目录有删除保护，文件可能仍在磁盘上）
 ui/qrcode.jpg
+ui/qrcode.removed.jpg
+ui/probe_delete_me.txt
 # WebView2 运行时在 exe 旁生成的用户数据目录
 *.WebView2/
 EBWebView/

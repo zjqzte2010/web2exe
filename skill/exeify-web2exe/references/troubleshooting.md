@@ -46,3 +46,40 @@
 
 - 本版本把网页资源自包含附在 exe 尾部，属于**打包而非加密**，有工具可以抽出来。
 - 需要更强保护时如实说明做不到「不可提取」，可建议后端化（把敏感逻辑放服务端），不要承诺加密。
+
+## 用户要「换成自己的签名证书 / 上架要用」
+
+先说清事实，别含糊：
+
+- 本版命令行的 APK 签名**固定使用内置 demo 密钥**（`CN=Exeify Demo`，私钥随仓库公开），**没有** `--keystore` 之类参数。任何拿到该私钥的人都能签出同包名的包，所以**绝对不要拿它对外分发或上架**。
+- 用户只是自己侧载 / 内部小范围用：可以继续用，但要在交付里写明签名是 demo 的。
+- 用户要正式分发，给两条可执行路径：
+
+**A. 改源码换密钥后重新编译**（改动最小、最干净的路线）
+
+```bash
+# 1) 生成自有密钥对（RSA 2048，有效期可自定）
+keytool -genkeypair -v -keystore my-release.jks -alias mykey -keyalg RSA -keysize 2048 -validity 36500 -storepass <密码> -keypass <密码> -dname "CN=公司名, O=组织, C=CN"
+# 2) 导出私钥（PKCS#8 / DER）与证书（DER）
+keytool -importkeystore -srckeystore my-release.jks -destkeystore my.p12 -deststoretype PKCS12 -srcalias mykey
+openssl pkcs12 -in my.p12 -nocerts -nodes -out my.key.pem
+openssl pkcs8 -topk8 -inform PEM -outform DER -in my.key.pem -out private.der -nocrypt
+keytool -exportcert -rfc -keystore my-release.jks -alias mykey -storepass <密码> -file my.crt.pem
+openssl x509 -in my.crt.pem -outform DER -out cert.der
+```
+把 `private.der`（私钥）与 `cert.der`（证书）替换 `assets/apk/key.pem` 中的对应内容，然后 `cargo build --release`，之后打的 apk 就是自有签名。
+
+**B. 对已生成的 apk 直接重签**（产物不用重新打包）
+
+```bash
+apksigner sign --ks my-release.jks --ks-key-alias mykey --out app-signed.apk app.apk
+apksigner verify -v app-signed.apk
+```
+必须提醒：重签后本 skill 的 `scripts/verify_apk.py` 会报「验签不匹配」，因为它按内置证书校验 —— 这是**预期行为**，不是包坏了；改用 `apksigner verify` 校验即可。
+
+## 目录里的文件删不掉（Access denied / 删完仍在）
+
+- 症状：某项目目录下所有文件都删不掉，连自己刚新建的探针文件也删不掉；文件本身无锁、可读可复制。
+- 说明：这是宿主对该目录的文件系统保护，与打包器无关。**不要**反复换删除方式（`Remove-Item` / `[IO.File]::Delete` / 改名 / 移动到别处都无效），也不要为此改成"覆盖内容"来假装清理干净。
+- 正确处置：确认该文件是否被代码引用、是否已被 `.gitignore` 排除、是否曾进入 git 历史；三项都为「否」就算处理到位，如实告知用户受环境限制需自行删除。若确实要物理删除，把项目整体搬到不受保护的目录（如 `D:\work\`）后再删。
+
