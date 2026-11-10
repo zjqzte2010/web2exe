@@ -91,6 +91,25 @@ exeify pack --local <网页目录> --apk <输出.apk>
 exeify version   # 打印版本号
 ```
 
+## 豆包 Skill（给 AI 助手直接调用）
+
+仓库里的 `skill/exeify-web2exe/` 是一个可直接装进豆包技能目录的 Skill：
+
+```
+skill/exeify-web2exe/
+├── SKILL.md                 # 触发词、参数表、成功/失败判定、验收要求
+├── exeify.exe               # 随附的打包器（1.4 MB，离线可用，不用另下载）
+├── scripts/verify_apk.py    # 产物 APK 校验脚本（免 Android SDK）
+├── references/troubleshooting.md
+├── LICENSE / NOTICE         # 二次开发署名（再分发请保留）
+```
+
+安装：把 `skill/exeify-web2exe` 整个目录复制到豆包技能根，例如
+`C:\Users\admin\Doubao\skills\exeify-web2exe`（本机）或
+`<...>\agent_mode\workspace\.user_skills\exeify-web2exe`（工作区）。
+
+装好后在对话里说「把这个网页打包成 exe」「把网址做成桌面程序，顺便出个 apk」即可触发。
+
 ## 技术栈
 
 - [wry](https://github.com/tauri-apps/wry) + [tao](https://github.com/tauri-apps/tao) —— 系统 WebView2

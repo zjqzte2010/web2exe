@@ -3,6 +3,8 @@
 /.cargo
 /out/
 *.exe
+# 例外：豆包 Skill 必须自带打包器二进制，否则装到技能目录后无法打包
+!skill/**/exeify.exe
 # 已下线的公众号二维码素材（界面不再引用）
 ui/qrcode.jpg
 # WebView2 运行时在 exe 旁生成的用户数据目录
