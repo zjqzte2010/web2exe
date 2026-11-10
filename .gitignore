@@ -1,0 +1,27 @@
+/target
+/dist
+/.cargo
+/out/
+*.exe
+# 已下线的公众号二维码素材（界面不再引用）
+ui/qrcode.jpg
+# WebView2 运行时在 exe 旁生成的用户数据目录
+*.WebView2/
+EBWebView/
+# 打包器自身的用户数据目录（调试残留）
+wvtest/
+# 本地调试/构建日志与临时诊断文件
+build*.log
+build*.err
+*.err.txt
+*.out.txt
+diag*.txt
+d2*.txt
+d3*.txt
+# 过程截图与图标抽取检查图（不属于仓库内容）
+iconcheck_*.png
+shot_*.png
+apk_icon_check.png
+# 编辑器/备份文件
+*.bak
+$null

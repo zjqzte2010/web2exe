@@ -1,0 +1,21 @@
+Exeify
+Copyright 2026 不坑老师 (Bukeng Laoshi)
+Copyright 2026 zjqzte2010（二次开发部分 / fork modifications）
+
+原作者项目主页 Original project: https://github.com/44886/Exeify
+二次开发仓库 Fork: https://github.com/zjqzte2010/web2exe
+
+本产品包含由「不坑老师」开发的软件。
+This product includes software developed by 不坑老师 (Bukeng Laoshi).
+
+本仓库在原项目基础上做了二次开发，主要改动：图形界面重构、在线网址与本地目录双模式打包、
+可选同时产出 Android APK、内置图标替换、WebView2 用户数据目录隔离与创建失败自动重试等。
+Modifications in this fork: rebuilt GUI, dual-mode packaging (online URL / local folder),
+optional Android APK output, custom launcher icon, WebView2 profile isolation and retry.
+
+根据 Apache License 2.0，对本项目进行二次开发或再分发时，
+必须保留本 NOTICE 文件中的署名信息，以及源码中的版权声明与许可证。
+
+When redistributing this work or derivative works, you must retain the
+attribution notices contained in this NOTICE file, along with the copyright
+and license notices in the source, as required by the Apache License 2.0.

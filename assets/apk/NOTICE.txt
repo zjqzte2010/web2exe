@@ -1,0 +1,10 @@
+Exeify
+
+本 APK 使用 Exeify 打包生成。
+This APK was packaged with Exeify.
+
+开源地址 / Source: https://github.com/44886/Exeify
+
+Exeify 以 Apache License 2.0 授权。再分发本 APK 时请保留本文件中的署名信息。
+Licensed under the Apache License 2.0. Please retain this attribution notice
+when redistributing.
